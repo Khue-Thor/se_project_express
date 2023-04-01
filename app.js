@@ -8,3 +8,8 @@ const {PORT = 3001} = process.env;
 
 // DataBase Connection
 mongoose.connect("mongodb://localhost:27017/wtwr_db");
+
+
+app.listen(PORT, () => {
+  console.log('Link to the server')
+})
