@@ -1,0 +1,14 @@
+const User = require("../models/user");
+
+const getUsers = (req, res) => {
+  User.fing({})
+    .then((users) => {
+      if (!users) {
+        res.send({ message: "Requested resource not found" });
+      }
+      res.send({
+        data: users,
+      });
+    })
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
