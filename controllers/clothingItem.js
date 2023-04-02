@@ -1,6 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
 
-const getItems = (req, res, nex) => {
+const getItems = (req, res, next) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
@@ -19,9 +19,34 @@ const createItem = (req, res, next) => {
     })
     .catch((err) => {
       if(err.name === "ValidationError") {
-        res.status(401).send({ message: "Invalid Data"})
+        res.status(401).send({ message: "Requested resource not found"})
       } else {
         next(err)
       }
     })
+}
+
+const deleteItem = (req, res, next) => {
+  const { id } = req.params;
+
+  ClothingItem.findById(id)
+    .orFail()
+    .then((item) => {
+      if (item.owner.equal(req.user._id)) {
+        return item.deleteOne(() => res.send({ clothingItem: item}));
+      }
+      return res.status(403).send({ message: "Forbidden"});
+    })
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(401).send({ message: "Requested resource not found"})
+      }
+    })
+}
+
+
+module.exports = {
+  getItems,
+  createItem,
+  deleteItem
 }
