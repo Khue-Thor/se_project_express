@@ -8,20 +8,20 @@ const getItems = (req, res, next) => {
     });
 };
 
-const createItem = (req, res, next) => {
-  const userId = req.user._id;
-
+const createItem = (req, res) => {
+  console.log(req);
+  console.log(req.body);
+  // const userId = req.user._id;
   const { name, weather, imageUrl } = req.body;
 
-  ClothingItem.create({ name, weather, imageUrl, owner: userId })
+  ClothingItem.create({ name, weather, imageUrl })
     .then((item) => {
-      res.status(200).send(item);
+      console.log(item);
+      res.status(200).send({ data: item });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(401).send({ message: "Requested resource not found" });
-      } else {
-        next(err);
+        res.status(401).send({ message: "Invalid data" });
       }
     });
 };
