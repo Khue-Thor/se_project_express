@@ -4,7 +4,7 @@ const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      res.status(500).send({message: "Error from getItems",err})
+      res.status(500).send({ message: "Error from getItems", err });
     });
 };
 
@@ -21,13 +21,12 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(500).send({ message: "Invalid data" });
+        res.status(400).send({ message: "Invalid data" });
       }
-
     });
 };
 
-const deleteItem = (req, res, next) => {
+const deleteItem = (req, res) => {
   const { id } = req.params;
 
   ClothingItem.findById(id)
@@ -40,13 +39,28 @@ const deleteItem = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(401).send({ message: "Requested resource not found" });
+        res.status(400).send({ message: "Invalid Id" });
       }
     });
+};
+
+const updateItem = (req, res) => {
+  const { itemId } = req.params;
+  const { imageUrl } = req.body;
+
+  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } }).then(
+    (item) => {
+      res.status(200).send({ data: item });
+    }
+  )
+  .catch((err) => {
+    res.status(500).send({message: "Error from updateItem", e})
+  })
 };
 
 module.exports = {
   getItems,
   createItem,
   deleteItem,
+  updateItem,
 };
