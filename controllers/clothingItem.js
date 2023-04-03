@@ -27,9 +27,9 @@ const createItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  const { id } = req.params;
+  const { itemId } = req.params;
 
-  ClothingItem.findById(id)
+  ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       if (item.owner.equal(req.user._id)) {

@@ -13,7 +13,7 @@ const getUsers = (req, res) => {
     .catch((err) => res.status(404).send({ message: err.message }));
 };
 
-const getUser = (req, res, next) => {
+const getUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -24,7 +24,6 @@ const getUser = (req, res, next) => {
       });
     })
     .catch((err) => res.status(500).send({ message: err.message }));
-  next();
 };
 
 const createUser = (req, res) => {
