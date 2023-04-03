@@ -1,30 +1,40 @@
-const User = require('../models/user');
+const User = require("../models/user");
+const { STATUS_CODES } = require("../utils/errors");
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
       if (!users) {
-        res.status(404).send({ message: 'Requested resource not found' });
+        res.status(STATUS_CODES.NotFound).send({ message: "Users not found" });
       }
       res.send({
         data: users,
       });
     })
-    .catch((err) => res.status(404).send({ message: err.message }));
+    .catch((err) =>
+      res
+        .status(STATUS_CODES.ServerError)
+        .send({ message: "Error occured on server" })
+    );
 };
 
 const getUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'User not found' });
+        return res
+          .status(STATUS_CODES.NotFound)
+          .send({ message: "User not found" });
       }
       res.send({
         data: user,
       });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
-    
+    .catch((err) =>
+      res
+        .status(STATUS_CODES.ServerError)
+        .send({ message: "Error occured on server" })
+    );
 };
 
 const createUser = (req, res) => {
@@ -34,7 +44,15 @@ const createUser = (req, res) => {
     .then((user) => {
       res.send({ name: user.name, avatar: user.avatar });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((error) => {
+      if (error.name === "ValidationError") {
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
+      } else if (error.code === STATUS_CODES.DuplicateError) {
+        res
+          .status(STATUS_CODES.Conflict)
+          .send({ message: "User already exists! " });
+      }
+    });
 };
 
 module.exports = {
