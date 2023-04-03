@@ -12,14 +12,12 @@ const getUsers = (req, res) => {
       });
     })
     .catch((err) => {
-      if(err.name === "CastError") {
-        res
-        .status(STATUS_CODES.NotFound)
-        .send({ message: "Users not found!" });
+      if (err.name === "CastError") {
+        res.status(STATUS_CODES.NotFound).send({ message: "Users not found!" });
       } else {
         res
-        .status(STATUS_CODES.ServerError)
-        .send({ message: "Error occured on server" })
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "Error occured on server" });
       }
     });
 };
@@ -32,19 +30,17 @@ const getUser = (req, res) => {
           .status(STATUS_CODES.NotFound)
           .send({ message: "User not found" });
       }
-      res.send({
+      return res.send({
         data: user,
       });
     })
     .catch((err) => {
-      if(err.name === "CastError") {
-        res
-        .status(STATUS_CODES.NotFound)
-        .send({ message: "Users not found!" });
+      if (err.name === "CastError") {
+        res.status(STATUS_CODES.NotFound).send({ message: "Users not found!" });
       } else {
         res
-        .status(STATUS_CODES.ServerError)
-        .send({ message: "Error occured on server" })
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "Error occured on server" });
       }
     });
 };

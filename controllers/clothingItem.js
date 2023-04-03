@@ -42,9 +42,17 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(STATUS_CODES.NoContent).send({}))
+    .then((item) => res.status(STATUS_CODES.NoContent).send({item}))
     .catch((err) => {
-      res.status(STATUS_CODES.BadRequest).send({ message: "Invalid id" });
+      if (err.name === "CastError") {
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
+      } else if (err.name === "DocumentNotFoundError") {
+        res.status(STATUS_CODES.NotFound).send({ message: "Item not found" });
+      } else {
+        res
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "An error has occurred on the server" });
+      }
     });
 };
 
