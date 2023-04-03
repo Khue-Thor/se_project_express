@@ -35,35 +35,14 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-
-  ClothingItem.findById(itemId)
-    .orFail()
+  ClothingItem.findByIdAndDelete(itemId)
     .then((item) => {
-      if (item.owner.equal(req.user._id)) {
-        return item.deleteOne(() => res.send({ clothingItem: item }));
-      }
-      return res.status(403).send({ message: 'Forbidden' });
+      res.status(204).send({})
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid Id' });
-      }
-    });
+      res.status(400).send({message: "Invalid id"})
+    })
 };
-
-// const updateItem = (req, res) => {
-//   const { itemId } = req.params;
-//   const { imageUrl } = req.body;
-
-//   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } }).then(
-//     (item) => {
-//       res.status(200).send({ data: item });
-//     }
-//   )
-//   .catch((err) => {
-//     res.status(500).send({message: "Error from updateItem", e})
-//   })
-// };
 
 const likeItem = (req, res) => {
   const { id } = req.params;
