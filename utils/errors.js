@@ -1,6 +1,7 @@
 const STATUS_CODES = {
   Ok: 200,
   Created: 201,
+  NoContent: 204,
   BadRequest: 400,
   Unauthorized: 401,
   Forbidden: 403,
@@ -9,5 +10,5 @@ const STATUS_CODES = {
 }
 
 module.exports = {
-
+  STATUS_CODES
 }

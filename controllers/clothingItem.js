@@ -1,8 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
+const {STATUS_CODES} = require("../utils/errors")
+
 
 const getItems = (req, res) => {
   ClothingItem.find({})
-    .then((items) => res.status(200).send(items))
+    .then((items) => res.status(STATUS_CODES.Ok).send(items))
     .catch((err) => {
       res.status(500).send({ message: "Error from getItems", err });
     });
@@ -11,7 +13,7 @@ const getItems = (req, res) => {
 const createItem = (req, res) => {
   if (!req.user || !req.user._id) {
     // handle the case where req.user is undefined or null
-    res.status(401).send({ message: "Unauthorized" });
+    res.status(STATUS_CODES.Unauthorized).send({ message: "Unauthorized" });
     return;
   }
 
@@ -25,13 +27,13 @@ const createItem = (req, res) => {
     owner: userId,
   })
     .then((item) => {
-      res.status(201).send({ data: item });
+      res.status(STATUS_CODES.Created).send({ data: item });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Invalid data" });
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
       } else {
-        res.status(500).send({ message: "Server error" });
+        res.status(STATUS_CODES.ServerError).send({ message: "Server error" });
       }
     });
 };
@@ -40,9 +42,9 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(204).send({ clothingItem: item }))
+    .then((item) => res.status(STATUS_CODES.NoContent).send({}))
     .catch((err) => {
-      res.status(400).send({ message: "Invalid id" });
+      res.status(STATUS_CODES.BadRequest).send({ message: "Invalid id" });
     });
 };
 
@@ -56,16 +58,16 @@ const likeItem = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: "Card not found" });
+        res.status(STATUS_CODES.NotFound).send({ message: "Card not found" });
       } else {
         res.send(card);
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(400).send({ message: "No card with this id" });
+        res.status(STATUS_CODES.BadRequest).send({ message: "No card with this id" });
       } else {
-        res.status(500).send({ message: "An error has occured on the server" });
+        res.status(STATUS_CODES.ServerError).send({ message: "An error has occured on the server" });
       }
     });
 };
@@ -80,16 +82,16 @@ const disLikeItem = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: "Card not found" });
+        res.status(STATUS_CODES.NotFound).send({ message: "Card not found" });
       } else {
         res.send(card);
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(400).send({ message: "No card with this id" });
+        res.status(STATUS_CODES.BadRequest).send({ message: "No card with this id" });
       } else {
-        res.status(500).send({ message: "An error has occured on the server" });
+        res.status(STATUS_CODES.ServerError).send({ message: "An error has occured on the server" });
       }
     });
 };
