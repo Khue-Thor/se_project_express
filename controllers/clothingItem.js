@@ -9,22 +9,29 @@ const getItems = (req, res) => {
 };
 
 const createItem = (req, res) => {
-  console.log(req);
-  console.log(req.body);
-  // const userId = req.user._id;
+  if (!req.user || !req.user._id) {
+    // handle the case where req.user is undefined or null
+    res.status(401).send({ message: "Unauthorized" });
+    return;
+  }
+
+  const userId = req.user._id;
   const { name, weather, imageUrl } = req.body;
 
-  ClothingItem.create({ name, weather, imageUrl })
+  ClothingItem.create({ name, weather, imageUrl, owner: userId })
     .then((item) => {
-      console.log(item);
       res.status(200).send({ data: item });
     })
     .catch((err) => {
+      console.error(err);
       if (err.name === "ValidationError") {
         res.status(400).send({ message: "Invalid data" });
+      } else {
+        res.status(500).send({ message: "Server error" });
       }
     });
 };
+
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
