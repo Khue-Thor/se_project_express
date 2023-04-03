@@ -1,32 +1,34 @@
-const ClothingItem = require("../models/clothingItem");
+const ClothingItem = require('../models/clothingItem');
 
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      res.status(500).send({ message: "Error from getItems", err });
+      res.status(500).send({ message: 'Error from getItems', err });
     });
 };
 
 const createItem = (req, res) => {
   if (!req.user || !req.user._id) {
     // handle the case where req.user is undefined or null
-    res.status(401).send({ message: "Unauthorized" });
+    res.status(401).send({ message: 'Unauthorized' });
     return;
   }
 
   const userId = req.user._id;
   const { name, weather, imageUrl } = req.body;
 
-  ClothingItem.create({ name, weather, imageUrl, owner: userId })
+  ClothingItem.create({
+    name, weather, imageUrl, owner: userId,
+  })
     .then((item) => {
       res.status(200).send({ data: item });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Invalid data" });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Invalid data' });
       } else {
-        res.status(500).send({ message: "Server error" });
+        res.status(500).send({ message: 'Server error' });
       }
     });
 };
@@ -40,11 +42,11 @@ const deleteItem = (req, res) => {
       if (item.owner.equal(req.user._id)) {
         return item.deleteOne(() => res.send({ clothingItem: item }));
       }
-      return res.status(403).send({ message: "Forbidden" });
+      return res.status(403).send({ message: 'Forbidden' });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(400).send({ message: "Invalid Id" });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Invalid Id' });
       }
     });
 };
@@ -69,20 +71,20 @@ const likeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     id,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: "Card not found" });
+        res.status(404).send({ message: 'Card not found' });
       } else {
         res.send(card);
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(400).send({ message: "No card with this id" });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'No card with this id' });
       } else {
-        res.status(500).send({ message: "An error has occured on the server" });
+        res.status(500).send({ message: 'An error has occured on the server' });
       }
     });
 };
@@ -93,20 +95,20 @@ const disLikeItem = (req, res) => {
   ClothingItem.findByIdAndUpdate(
     id,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: "Card not found" });
+        res.status(404).send({ message: 'Card not found' });
       } else {
         res.send(card);
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(400).send({ message: "No card with this id" });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'No card with this id' });
       } else {
-        res.status(500).send({ message: "An error has occured on the server" });
+        res.status(500).send({ message: 'An error has occured on the server' });
       }
     });
 };

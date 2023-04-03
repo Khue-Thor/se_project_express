@@ -1,10 +1,10 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
       if (!users) {
-        res.status(404).send({ message: "Requested resource not found" });
+        res.status(404).send({ message: 'Requested resource not found' });
       }
       res.send({
         data: users,
@@ -14,27 +14,27 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "User not found" });
+        return res.status(404).send({ message: 'User not found' });
       }
       res.send({
         data: user,
       });
     })
     .catch((err) => res.status(500).send({ message: err.message }));
+    
 };
 
 const createUser = (req, res) => {
-  const {name, avatar} = req.body;
+  const { name, avatar } = req.body;
 
-  User.create({name, avatar})
+  User.create({ name, avatar })
     .then((user) => {
-      res.send({ name: user.name, avatar: user.avatar})
+      res.send({ name: user.name, avatar: user.avatar });
     })
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 module.exports = {
