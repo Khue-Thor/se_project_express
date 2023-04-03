@@ -14,10 +14,11 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  User.findById(req.user._id)
+  const {userId} = req.params;
+  User.findById(userId)
     .then((user) => {
       if (!user) {
-        res.status(404).send({ message: "Requested resource not found" });
+        return res.status(404).send({ message: "User not found" });
       }
       res.send({
         data: user,
