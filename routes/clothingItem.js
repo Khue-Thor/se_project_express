@@ -19,9 +19,6 @@ router.post('/', createItem);
 // Delete
 router.delete('/:itemId', deleteItem);
 
-// Update
-// router.put("/:itemId", updateItem);
-
 // Like
 router.put('/:id/likes', likeItem);
 
