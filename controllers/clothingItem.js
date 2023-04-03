@@ -23,7 +23,6 @@ const createItem = (req, res) => {
       res.status(200).send({ data: item });
     })
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError") {
         res.status(400).send({ message: "Invalid data" });
       } else {
@@ -71,19 +70,21 @@ const likeItem = (req, res) => {
     id,
     { $addToSet: { likes: req.user._id } },
     { new: true }
-  ).then((card) => {
-    if (!card) {
-      res.status(404).send({ message: "Card not found" });
-    } else {
-      res.send(card);
-    }
-  }).catch((err) => {
-    if (err.name === "CastError") {
-      res.status(400).send({message: "No card with this id"});
-    } else {
-      res.status(500).send({message: "An error has occured on the server"})
-    }
-  })
+  )
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: "Card not found" });
+      } else {
+        res.send(card);
+      }
+    })
+    .catch((err) => {
+      if (err.name === "CastError") {
+        res.status(400).send({ message: "No card with this id" });
+      } else {
+        res.status(500).send({ message: "An error has occured on the server" });
+      }
+    });
 };
 
 module.exports = {

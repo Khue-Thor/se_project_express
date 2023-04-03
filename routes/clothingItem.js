@@ -22,6 +22,6 @@ router.delete("/:itemId", deleteItem);
 // router.put("/:itemId", updateItem);
 
 // Like
-router.put('./:id/likes', likeItem)
+router.put('/:id', likeItem)
 
 module.exports = router;
