@@ -9,6 +9,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Khue-Thor/se_project_express.git"
+  },
   "keywords": [],
   "author": "Khuephamy Phialouang",
   "license": "ISC",
@@ -17,6 +21,7 @@
     "mongoose": "^7.0.3",
     "validator": "^13.9.0"
   },
+  "homepage": "https://github.com/Khue-Thor/se_project_express#readme",
   "devDependencies": {
     "eslint": "^8.37.0",
     "eslint-config-airbnb-base": "^15.0.0",

@@ -1,40 +1,40 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const getUsers = (req, res) => {
-  User.fing({})
+  User.find({})
     .then((users) => {
       if (!users) {
-        res.send({ message: "Requested resource not found" });
+        res.status(404).send({ message: 'Requested resource not found' });
       }
       res.send({
         data: users,
       });
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(404).send({ message: err.message }));
 };
 
-const getUser = (req, res, next) => {
+const getUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        res.send({ message: "Requested resource not found" });
+        return res.status(404).send({ message: 'User not found' });
       }
       res.send({
         data: user,
       });
     })
     .catch((err) => res.status(500).send({ message: err.message }));
-  next();
+    
 };
 
 const createUser = (req, res) => {
-  const {name, avatar} = req.body;
+  const { name, avatar } = req.body;
 
-  User.create({name, avatar})
+  User.create({ name, avatar })
     .then((user) => {
-      res.send({ name: user.name, avatar: user.avatar})
+      res.send({ name: user.name, avatar: user.avatar });
     })
-    .catch(err => res.status(500).send({ message: err.message }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 module.exports = {
