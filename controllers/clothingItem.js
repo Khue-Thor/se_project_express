@@ -51,23 +51,26 @@ const deleteItem = (req, res) => {
     });
 };
 
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageUrl } = req.body;
+// const updateItem = (req, res) => {
+//   const { itemId } = req.params;
+//   const { imageUrl } = req.body;
 
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } }).then(
-    (item) => {
-      res.status(200).send({ data: item });
-    }
-  )
-  .catch((err) => {
-    res.status(500).send({message: "Error from updateItem", e})
-  })
-};
+//   ClothingItem.findByIdAndUpdate(itemId, { $set: { imageUrl } }).then(
+//     (item) => {
+//       res.status(200).send({ data: item });
+//     }
+//   )
+//   .catch((err) => {
+//     res.status(500).send({message: "Error from updateItem", e})
+//   })
+// };
+
+const likeItem = (req, res) => {
+
+}
 
 module.exports = {
   getItems,
   createItem,
   deleteItem,
-  updateItem,
 };

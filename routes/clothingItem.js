@@ -3,7 +3,6 @@ const router = require("express").Router();
 const {
   createItem,
   getItems,
-  updateItem,
   deleteItem,
 } = require("../controllers/clothingItem");
 
@@ -19,6 +18,6 @@ router.post("/", createItem);
 router.delete("/:itemId", deleteItem);
 
 // Update
-router.put("/:itemId", updateItem);
+// router.put("/:itemId", updateItem);
 
 module.exports = router;
