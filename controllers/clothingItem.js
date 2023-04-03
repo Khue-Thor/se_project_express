@@ -1,10 +1,10 @@
 const ClothingItem = require("../models/clothingItem");
 
-const getItems = (req, res, next) => {
+const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      next(err);
+      res.status(500).send({message: "Error from getItems",err})
     });
 };
 
@@ -21,8 +21,9 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(401).send({ message: "Invalid data" });
+        res.status(500).send({ message: "Invalid data" });
       }
+
     });
 };
 

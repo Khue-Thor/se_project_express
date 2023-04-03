@@ -8,9 +8,9 @@ const { PORT = 3001 } = process.env;
 // DataBase Connection
 mongoose.connect("mongodb://localhost:27017/wtwr_db");
 
-const routes = require('./routes')
+const routes = require('./routes/index')
 app.use(express.json())
-app.use(routes);
+app.use("/", routes);
 
 
 app.listen(PORT, () => {
