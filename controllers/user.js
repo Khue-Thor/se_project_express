@@ -11,11 +11,17 @@ const getUsers = (req, res) => {
         data: users,
       });
     })
-    .catch((err) =>
-      res
+    .catch((err) => {
+      if(err.name === "CastError") {
+        res
+        .status(STATUS_CODES.NotFound)
+        .send({ message: "Users not found!" });
+      } else {
+        res
         .status(STATUS_CODES.ServerError)
         .send({ message: "Error occured on server" })
-    );
+      }
+    });
 };
 
 const getUser = (req, res) => {
@@ -30,11 +36,17 @@ const getUser = (req, res) => {
         data: user,
       });
     })
-    .catch((err) =>
-      res
+    .catch((err) => {
+      if(err.name === "CastError") {
+        res
+        .status(STATUS_CODES.NotFound)
+        .send({ message: "Users not found!" });
+      } else {
+        res
         .status(STATUS_CODES.ServerError)
         .send({ message: "Error occured on server" })
-    );
+      }
+    });
 };
 
 const createUser = (req, res) => {
