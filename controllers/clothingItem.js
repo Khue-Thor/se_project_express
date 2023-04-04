@@ -5,7 +5,7 @@ const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(STATUS_CODES.Ok).send(items))
     .catch((err) => {
-      res.status(500).send({ message: "Error from getItems", err });
+      res.status(STATUS_CODES.ServerError).send({ message: "Error from getItems", err });
     });
 };
 
@@ -74,7 +74,7 @@ const likeItem = (req, res) => {
       if (err.name === "CastError") {
         res
           .status(STATUS_CODES.BadRequest)
-          .send({ message: "No card with this id" });
+          .send({ message: "Invalid Id" });
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -102,7 +102,7 @@ const disLikeItem = (req, res) => {
       if (err.name === "CastError") {
         res
           .status(STATUS_CODES.BadRequest)
-          .send({ message: "No card with this id" });
+          .send({ message: "Invalid Id" });
       } else {
         res
           .status(STATUS_CODES.ServerError)

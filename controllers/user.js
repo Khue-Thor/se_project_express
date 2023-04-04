@@ -4,21 +4,17 @@ const { STATUS_CODES } = require("../utils/errors");
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      res.status(STATUS_CODES.Ok).send({data: users})
+      res.status(STATUS_CODES.Ok).send({ data: users });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(STATUS_CODES.NotFound).send({ message: "Users not found!" });
-      } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "Error occured on server" });
-      }
+      res
+        .status(STATUS_CODES.ServerError)
+        .send({ message: "Error occured on server", err });
     });
 };
 
 const getAUser = (req, res) => {
-  const id = req.user._id;
+  const id = req.params;
   User.findById(id)
     .then((user) => {
       if (!user) {
@@ -27,12 +23,12 @@ const getAUser = (req, res) => {
           .send({ message: "User not found" });
       }
       return res.send({
-        data: user
+        data: user,
       });
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(STATUS_CODES.NotFound).send({ message: "Users not found!" });
+        res.status(STATUS_CODES.NotFound).send({ message: "Invalid Id" });
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -51,10 +47,10 @@ const createUser = (req, res) => {
     .catch((error) => {
       if (error.name === "ValidationError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
-      } else if (error.code === STATUS_CODES.DuplicateError) {
+      } else {
         res
-          .status(STATUS_CODES.Conflict)
-          .send({ message: "User already exists! " });
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "Error occured on server" });
       }
     });
 };
