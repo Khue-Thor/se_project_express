@@ -4,12 +4,7 @@ const { STATUS_CODES } = require("../utils/errors");
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => {
-      if (!users) {
-        res.status(STATUS_CODES.NotFound).send({ message: "Users not found" });
-      }
-      res.send({
-        data: users,
-      });
+      res.status(STATUS_CODES.Ok).send({data: users})
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -23,7 +18,7 @@ const getUsers = (req, res) => {
 };
 
 const getAUser = (req, res) => {
-  const {id} = req.user._id;
+  const id = req.user._id;
   User.findById(id)
     .then((user) => {
       if (!user) {
