@@ -22,7 +22,7 @@ const getUsers = (req, res) => {
     });
 };
 
-const getUser = (req, res) => {
+const getAUser = (req, res) => {
   const {id} = req.user._id;
   User.findById(id)
     .then((user) => {
@@ -66,6 +66,6 @@ const createUser = (req, res) => {
 
 module.exports = {
   getUsers,
-  getUser,
+  getAUser,
   createUser,
 };
