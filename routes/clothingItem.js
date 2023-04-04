@@ -17,7 +17,7 @@ router.get('/', getItems);
 router.post('/', createItem);
 
 // Delete
-router.delete('/:itemId', deleteItem);
+router.delete('/:id', deleteItem);
 
 // Like
 router.put('/:id/likes', likeItem);

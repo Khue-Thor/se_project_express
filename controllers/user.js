@@ -23,7 +23,8 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  User.findById(req.user._id)
+  const {id} = req.user._id;
+  User.findById(id)
     .then((user) => {
       if (!user) {
         return res
@@ -31,7 +32,7 @@ const getUser = (req, res) => {
           .send({ message: "User not found" });
       }
       return res.send({
-        data: user,
+        data: user
       });
     })
     .catch((err) => {

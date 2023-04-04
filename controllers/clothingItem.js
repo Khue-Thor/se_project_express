@@ -1,6 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const {STATUS_CODES} = require("../utils/errors")
-
+const { STATUS_CODES } = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -39,10 +38,10 @@ const createItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  const { itemId } = req.params;
-  ClothingItem.findByIdAndDelete(itemId)
+  const { id } = req.params;
+  ClothingItem.findByIdAndDelete(id)
     .orFail()
-    .then((item) => res.status(STATUS_CODES.NoContent).send({item}))
+    .then((item) => res.status(STATUS_CODES.Ok).send({ ClothingItem: item }))
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
@@ -73,9 +72,13 @@ const likeItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "No card with this id" });
+        res
+          .status(STATUS_CODES.BadRequest)
+          .send({ message: "No card with this id" });
       } else {
-        res.status(STATUS_CODES.ServerError).send({ message: "An error has occured on the server" });
+        res
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "An error has occured on the server" });
       }
     });
 };
@@ -97,9 +100,13 @@ const disLikeItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "No card with this id" });
+        res
+          .status(STATUS_CODES.BadRequest)
+          .send({ message: "No card with this id" });
       } else {
-        res.status(STATUS_CODES.ServerError).send({ message: "An error has occured on the server" });
+        res
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "An error has occured on the server" });
       }
     });
 };
