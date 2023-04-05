@@ -1,4 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
+
 const { STATUS_CODES } = require("../utils/errors");
 
 const getItems = (req, res) => {
