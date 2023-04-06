@@ -1,5 +1,7 @@
 const User = require("../models/user");
 
+const bcrypt = require("bcrypt");
+
 const { STATUS_CODES } = require("../utils/errors");
 
 const getUsers = (req, res) => {
@@ -39,12 +41,20 @@ const getAUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
-    .then((user) => {
-      res.send({ name: user.name, avatar: user.avatar });
-    })
+  bcrypt
+    .hash(password, 10)
+    .then((hash) =>
+      User.create({ name, avatar, password: hash, avatar }).then((user) => {
+        res.status(STATUS_CODES.Created).send({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+        });
+      })
+    )
     .catch((error) => {
       if (error.name === "ValidationError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
