@@ -42,7 +42,12 @@ const deleteItem = (req, res) => {
   const { id } = req.params;
   ClothingItem.findByIdAndDelete(id)
     .orFail()
-    .then((item) => res.status(STATUS_CODES.Ok).send({ ClothingItem: item }))
+    .then((item) => {
+      if(item.owner.eqauls(req.user._id)) {
+        return item.deleteOne(() => res.send({ClothingItem: item}));
+      }
+      return res.send(STATUS_CODES.Forbidden).send({message: "Forbidden"});
+    })
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });

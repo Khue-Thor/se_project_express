@@ -1,8 +1,8 @@
-const User = require("../models/user");
-
 const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcrypt");
+
+const User = require("../models/user");
 
 const { STATUS_CODES } = require("../utils/errors");
 
@@ -86,17 +86,21 @@ const updateUser = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-       return res.status(STATUS_CODES.NotFound).send({message: "No user with this ID found"});
+        return res
+          .status(STATUS_CODES.NotFound)
+          .send({ message: "No user with this ID found" });
       }
-      return res.send({ data: user});
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data"});
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
       } else {
-        res.status(STATUS_CODES.ServerError).send({ message: "Error occured on server"});
+        res
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "Error occured on server" });
       }
-    })
+    });
 };
 
 module.exports = {
