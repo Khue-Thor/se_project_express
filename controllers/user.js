@@ -1,20 +1,12 @@
 const User = require("../models/user");
 
+const jwt = require('jsonwebtoken');
+
 const bcrypt = require("bcrypt");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.status(STATUS_CODES.Ok).send({ data: users });
-    })
-    .catch((err) => {
-      res
-        .status(STATUS_CODES.ServerError)
-        .send({ message: "Error occured on server", err });
-    });
-};
+const { JWT_SECRET } = require("../utils/config");
 
 const getAUser = (req, res) => {
   const { id } = req.params;
@@ -60,14 +52,32 @@ const createUser = (req, res) => {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
       } else {
         res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "Error occured on server" });
+          .status(STATUS_CODES.DuplicataeEroor)
+          .send({ message: "User already exit!" });
       }
+
     });
 };
 
+const login = (req, res) => {
+  const {email, password} = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      if(user) {
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        });
+        res.send({ email, token})
+      }
+    })
+    .catch(() => {
+      res.status(STATUS_CODES.Unauthorized).send("Incorrect email or password");
+    })
+}
+
 module.exports = {
-  getUsers,
   getAUser,
   createUser,
+  login
 };

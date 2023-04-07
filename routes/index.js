@@ -6,8 +6,14 @@ const clothingItem = require("./clothingItem");
 
 const user = require("./user");
 
+const {login, createUser} = require('../controllers/user')
+
+router.post('/signin', login);
+router.post('/signup', createUser);
+
 router.use("/items", clothingItem);
 router.use("/users", user);
+
 router.use((req, res) => [
   res
     .status(STATUS_CODES.NotFound)
