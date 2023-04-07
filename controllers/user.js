@@ -67,10 +67,14 @@ const createUser = (req, res) => {
     .catch((error) => {
       if (error.name === "ValidationError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
-      } else {
+      } else if (error.code === STATUS_CODES.DuplicateError) {
         res
           .status(STATUS_CODES.DuplicataeEroor)
           .send({ message: "User already exit!" });
+      } else {
+        res
+          .status(STATUS_CODES.ServerError)
+          .send({ message: "Error occured on server" });
       }
     });
 };
