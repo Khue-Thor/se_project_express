@@ -6,6 +6,7 @@ const STATUS_CODES = {
   Unauthorized: 401,
   Forbidden: 403,
   NotFound: 404,
+  ConflictError: 409,
   ServerError: 500,
   DuplicataeEroor: 11000,
 }

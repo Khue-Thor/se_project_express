@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
     handleAuthError(res);
   }
 
-  const token = authorization.replace("Bearer", "");
+  const token = authorization.replace("Bearer ", "");
   let payload;
 
   try {

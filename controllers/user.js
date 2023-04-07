@@ -21,12 +21,12 @@ const login = (req, res) => {
       }
     })
     .catch(() => {
-      res.status(STATUS_CODES.Unauthorized).send("Incorrect email or password");
+      res.status(STATUS_CODES.Unauthorized).send({message: "Incorrect email or password"});
     });
 };
 
 const getAUser = (req, res) => {
-  const { id } = req.params;
+  const  id  = req.user._id;
   User.findById(id)
     .then((user) => {
       if (!user) {
@@ -67,7 +67,7 @@ const createUser = (req, res) => {
     .catch((error) => {
       if (error.name === "ValidationError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
-      } else if (error.code === STATUS_CODES.DuplicateError) {
+      } else if (error.code === STATUS_CODES.ConflictError) {
         res
           .status(STATUS_CODES.DuplicataeEroor)
           .send({ message: "User already exit!" });
@@ -80,13 +80,13 @@ const createUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const userId = req.params;
+  const userId = req.user._id;
   const { name, avatar } = req.body;
 
   User.findByIdAndUpdate(
     userId,
     { $set: { name, avatar } },
-    { name: true, runValidators: true }
+    { new: true, runValidators: true }
   )
     .then((user) => {
       if (!user) {

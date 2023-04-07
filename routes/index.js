@@ -16,7 +16,7 @@ router.post('/signup', createUser);
 router.use("/items", clothingItem);
 router.use("/users", auth, user);
 
-router.use((req, res) => [
+router.use(auth, (req, res) => [
   res
     .status(STATUS_CODES.NotFound)
     .send({ message: "Requested resource not found" }),
