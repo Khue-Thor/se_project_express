@@ -13,18 +13,18 @@ const {
 // CRUD
 
 // Read
-router.get('/', auth, getItems);
+router.get('/', getItems);
 
 // Create
 router.post('/', auth, createItem);
 
 // Delete
-router.delete('/:id', deleteItem);
+router.delete('/:id', auth, deleteItem);
 
 // Like
-router.put('/:id/likes', likeItem);
+router.put('/:id/likes', auth, likeItem);
 
 // Dislike
-router.delete('/:id/likes', disLikeItem);
+router.delete('/:id/likes', auth, disLikeItem);
 
 module.exports = router;
