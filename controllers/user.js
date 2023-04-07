@@ -1,12 +1,29 @@
 const User = require("../models/user");
 
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcrypt");
 
 const { STATUS_CODES } = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config");
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      if (user) {
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        });
+        res.send({ email, token });
+      }
+    })
+    .catch(() => {
+      res.status(STATUS_CODES.Unauthorized).send("Incorrect email or password");
+    });
+};
 
 const getAUser = (req, res) => {
   const { id } = req.params;
@@ -55,29 +72,36 @@ const createUser = (req, res) => {
           .status(STATUS_CODES.DuplicataeEroor)
           .send({ message: "User already exit!" });
       }
-
     });
 };
 
-const login = (req, res) => {
-  const {email, password} = req.body;
+const updateUser = (req, res) => {
+  const userId = req.params;
+  const { name, avatar } = req.body;
 
-  User.findUserByCredentials(email, password)
+  User.findByIdAndUpdate(
+    userId,
+    { $set: { name, avatar } },
+    { name: true, runValidators: true }
+  )
     .then((user) => {
-      if(user) {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-          expiresIn: "7d",
-        });
-        res.send({ email, token})
+      if (!user) {
+       return res.status(STATUS_CODES.NotFound).send({message: "No user with this ID found"});
+      }
+      return res.send({ data: user});
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data"});
+      } else {
+        res.status(STATUS_CODES.ServerError).send({ message: "Error occured on server"});
       }
     })
-    .catch(() => {
-      res.status(STATUS_CODES.Unauthorized).send("Incorrect email or password");
-    })
-}
+};
 
 module.exports = {
   getAUser,
   createUser,
-  login
+  login,
+  updateUser,
 };
