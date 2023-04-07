@@ -1,18 +1,27 @@
-const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcrypt");
 
+const User = require("../models/user");
+
 const { STATUS_CODES } = require("../utils/errors");
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => {
-      res.status(STATUS_CODES.Ok).send({ data: users });
+const { JWT_SECRET } = require("../utils/config");
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      if (user) {
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        });
+        res.send({ email, token });
+      }
     })
-    .catch((err) => {
-      res
-        .status(STATUS_CODES.ServerError)
-        .send({ message: "Error occured on server", err });
+    .catch(() => {
+      res.status(STATUS_CODES.Unauthorized).send("Incorrect email or password");
     });
 };
 
@@ -46,7 +55,7 @@ const createUser = (req, res) => {
   bcrypt
     .hash(password, 10)
     .then((hash) =>
-      User.create({ name, avatar, password: hash, avatar }).then((user) => {
+      User.create({ name, avatar, email, password: hash }).then((user) => {
         res.status(STATUS_CODES.Created).send({
           _id: user._id,
           name: user.name,
@@ -60,6 +69,34 @@ const createUser = (req, res) => {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
       } else {
         res
+          .status(STATUS_CODES.DuplicataeEroor)
+          .send({ message: "User already exit!" });
+      }
+    });
+};
+
+const updateUser = (req, res) => {
+  const userId = req.params;
+  const { name, avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    userId,
+    { $set: { name, avatar } },
+    { name: true, runValidators: true }
+  )
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(STATUS_CODES.NotFound)
+          .send({ message: "No user with this ID found" });
+      }
+      return res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
+      } else {
+        res
           .status(STATUS_CODES.ServerError)
           .send({ message: "Error occured on server" });
       }
@@ -67,7 +104,8 @@ const createUser = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
   getAUser,
   createUser,
+  login,
+  updateUser,
 };

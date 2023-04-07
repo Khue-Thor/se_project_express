@@ -7,6 +7,7 @@ const STATUS_CODES = {
   Forbidden: 403,
   NotFound: 404,
   ServerError: 500,
+  DuplicataeEroor: 11000,
 }
 
 module.exports = {
