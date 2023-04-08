@@ -6,12 +6,13 @@ const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
     .catch(() => {
-      res.status(STATUS_CODES.ServerError).send({ message: "Error from getItems"});
+      res
+        .status(STATUS_CODES.ServerError)
+        .send({ message: "Error from getItems" });
     });
 };
 
 const createItem = (req, res) => {
-
   const userId = req.user._id;
   const { name, weather, imageUrl } = req.body;
 
@@ -38,10 +39,10 @@ const deleteItem = (req, res) => {
   ClothingItem.findById(id)
     .orFail()
     .then((item) => {
-      if(item.owner.equals(req.user._id)) {
-        return item.deleteOne(() => res.send({ClothingItem: item}));
+      if (item.owner.equals(req.user._id)) {
+        return item.deleteOne().then(() => res.send({ ClothingItem: item }));
       }
-      return res.status(STATUS_CODES.Forbidden).send({message: "Forbidden"});
+      return res.status(STATUS_CODES.Forbidden).send({ message: "Forbidden" });
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -73,9 +74,7 @@ const likeItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res
-          .status(STATUS_CODES.BadRequest)
-          .send({ message: "Invalid Id" });
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -101,9 +100,7 @@ const disLikeItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res
-          .status(STATUS_CODES.BadRequest)
-          .send({ message: "Invalid Id" });
+        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
       } else {
         res
           .status(STATUS_CODES.ServerError)

@@ -67,9 +67,9 @@ const createUser = (req, res) => {
     .catch((error) => {
       if (error.name === "ValidationError") {
         res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
-      } else if (error.code === STATUS_CODES.ConflictError) {
+      } else if (error.code === STATUS_CODES.DuplicataeEroor) {
         res
-          .status(STATUS_CODES.DuplicataeEroor)
+          .status(STATUS_CODES.ConflictError)
           .send({ message: "User already exit!" });
       } else {
         res
