@@ -25,7 +25,7 @@ const login = (req, res) => {
     });
 };
 
-const getAUser = (req, res) => {
+const getUser = (req, res) => {
   const  id  = req.user._id;
   User.findById(id)
     .then((user) => {
@@ -108,7 +108,7 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  getAUser,
+  getUser,
   createUser,
   login,
   updateUser,
