@@ -108,8 +108,8 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
+  login,
   getUser,
   createUser,
-  login,
   updateUser,
 };
