@@ -26,15 +26,14 @@ const login = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  const  id  = req.user._id;
-  User.findById(id)
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         return res
           .status(STATUS_CODES.NotFound)
           .send({ message: "User not found" });
       }
-      return res.send({
+      res.send({
         data: user,
       });
     })
@@ -105,6 +104,7 @@ const updateUser = (req, res) => {
           .send({ message: "Error occured on server" });
       }
     });
+
 };
 
 module.exports = {

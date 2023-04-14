@@ -40,7 +40,7 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => {
       if (item.owner.equals(req.user._id)) {
-        return item.deleteOne().then(() => res.send({ ClothingItem: item }));
+        return item.deleteOne(() => res.send({ clothingItem: item }));
       }
       return res.status(STATUS_CODES.Forbidden).send({ message: "Forbidden" });
     })
