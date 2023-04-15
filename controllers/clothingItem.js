@@ -23,7 +23,7 @@ const createItem = (req, res) => {
     owner: userId,
   })
     .then((item) => {
-      res.status(STATUS_CODES.Created).send({ data: item });
+      res.status(STATUS_CODES.Created).send({item});
     })
     .catch((err) => {
       if (err.name === "ValidationError") {

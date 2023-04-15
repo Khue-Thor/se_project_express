@@ -10,8 +10,6 @@ const {
   disLikeItem,
 } = require('../controllers/clothingItem');
 
-// CRUD
-
 // Read
 router.get('/', getItems);
 
