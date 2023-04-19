@@ -8,6 +8,13 @@ const { STATUS_CODES } = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config");
 
+const {
+  ConflictError,
+  NotFoundError,
+  Unauthorized,
+  BadRequestError,
+} = require("../utils/errors");
+
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -21,7 +28,7 @@ const login = (req, res, next) => {
       }
     })
     .catch(() => {
-     next()
+      next(new Unauthorized("Incorrect email or password"));
     });
 };
 
@@ -29,9 +36,7 @@ const getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        return res
-          .status(STATUS_CODES.NotFound)
-          .send({ message: "User not found" });
+        throw NotFoundError("User not found");
       }
       res.send({
         data: user,
@@ -57,20 +62,16 @@ const createUser = (req, res, next) => {
     )
     .catch((error) => {
       if (error.name === "ValidationError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else if (error.code === STATUS_CODES.DuplicataeEroor) {
-        res
-          .status(STATUS_CODES.ConflictError)
-          .send({ message: "User already exit!" });
+        next(new ConflictError("User already exist"));
       } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "Error occured on server" });
+       next(error)
       }
     });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
 
@@ -81,22 +82,19 @@ const updateUser = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        return res
-          .status(STATUS_CODES.NotFound)
-          .send({ message: "No user with this ID found" });
+        throw NotFoundError('No user with this ID found')
       }
       return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else {
         res
           .status(STATUS_CODES.ServerError)
           .send({ message: "Error occured on server" });
       }
     });
-
 };
 
 module.exports = {
