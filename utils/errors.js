@@ -11,6 +11,11 @@ const STATUS_CODES = {
   DuplicataeEroor: 11000,
 }
 
+const ErrorHandler = (err, req, res, next) => {
+
+}
+
 module.exports = {
-  STATUS_CODES
+  STATUS_CODES,
+  ErrorHandler,
 }
