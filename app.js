@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 
 const { PORT = 3001 } = process.env;
 
+const { errors } = require("celebrate");
+
 const { ErrorHandler } = require("./utils/errors");
 
 // DataBase Connection
@@ -20,6 +22,7 @@ app.use(cors());
 
 app.use("/", routes);
 
+app.use(errors());
 app.use(ErrorHandler);
 
 app.listen(PORT, () => {
