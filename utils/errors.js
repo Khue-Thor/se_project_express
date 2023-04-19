@@ -12,7 +12,7 @@ const STATUS_CODES = {
 }
 
 const ErrorHandler = (err, req, res, next) => {
-
+  res.status(500).send({ message: 'An error occurred on the server' });
 }
 
 module.exports = {

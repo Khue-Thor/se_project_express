@@ -8,6 +8,7 @@ const {
   ForBiddenError,
 } = require("../utils/errors");
 
+
 const getItems = (req, res, next) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
