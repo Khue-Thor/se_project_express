@@ -2,17 +2,21 @@ const ClothingItem = require("../models/clothingItem");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const getItems = (req, res) => {
+const {
+  NotFoundError,
+  BadRequestError,
+  ForBiddenError,
+} = require("../utils/errors");
+
+const getItems = (req, res, next) => {
   ClothingItem.find({})
     .then((items) => res.send(items))
-    .catch(() => {
-      res
-        .status(STATUS_CODES.ServerError)
-        .send({ message: "Error from getItems" });
+    .catch((err) => {
+      next(err);
     });
 };
 
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   const userId = req.user._id;
   const { name, weather, imageUrl } = req.body;
 
@@ -23,18 +27,18 @@ const createItem = (req, res) => {
     owner: userId,
   })
     .then((item) => {
-      res.status(STATUS_CODES.Created).send({item});
+      res.status(STATUS_CODES.Created).send({ item });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else {
-        res.status(STATUS_CODES.ServerError).send({ message: "Server error" });
+        next(err)
       }
     });
 };
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { id } = req.params;
   ClothingItem.findById(id)
     .orFail()
@@ -42,13 +46,13 @@ const deleteItem = (req, res) => {
       if (item.owner.equals(req.user._id)) {
         return item.deleteOne().then(() => res.send({ ClothingItem: item }));
       }
-      return res.status(STATUS_CODES.Forbidden).send({ message: "Forbidden" });
+      return next(new ForBiddenError("Forbidden"))
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
+       next(new BadRequestError("Invalid Id"))
       } else if (err.name === "DocumentNotFoundError") {
-        res.status(STATUS_CODES.NotFound).send({ message: "Item not found" });
+        next(new NotFoundError('Item not found'))
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -57,7 +61,7 @@ const deleteItem = (req, res) => {
     });
 };
 
-const likeItem = (req, res) => {
+const likeItem = (req, res, next) => {
   const { id } = req.params;
 
   ClothingItem.findByIdAndUpdate(
@@ -67,14 +71,14 @@ const likeItem = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(STATUS_CODES.NotFound).send({ message: "Card not found" });
+       throw new NotFoundError("Card Not Found")
       } else {
         res.send(card);
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
+        next(new BadRequestError("Invalid Id"))
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -83,7 +87,7 @@ const likeItem = (req, res) => {
     });
 };
 
-const disLikeItem = (req, res) => {
+const disLikeItem = (req, res, next) => {
   const { id } = req.params;
 
   ClothingItem.findByIdAndUpdate(
@@ -100,7 +104,7 @@ const disLikeItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        res.status(STATUS_CODES.BadRequest).send({ message: "Invalid Id" });
+        next(new BadRequestError("Invalid Id"))
       } else {
         res
           .status(STATUS_CODES.ServerError)

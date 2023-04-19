@@ -9,9 +9,9 @@ const { STATUS_CODES } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 const {
-  ConflictError,
+  UnauthorizedError,
   NotFoundError,
-  Unauthorized,
+  ConflictError,
   BadRequestError,
 } = require("../utils/errors");
 
@@ -28,7 +28,7 @@ const login = (req, res, next) => {
       }
     })
     .catch(() => {
-      next(new Unauthorized("Incorrect email or password"));
+      next(new UnauthorizedError("Incorrect email or password"));
     });
 };
 
