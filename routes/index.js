@@ -8,12 +8,14 @@ const user = require("./user");
 
 const auth = require("../middlewares/auth");
 
+const {validateUserLogin, validateUserBody} = require("../middlewares/validation")
+
 const {login, createUser} = require('../controllers/user')
 
 
 
-router.post('/signin', login);
-router.post('/signup', createUser);
+router.post('/signin', validateUserLogin, login);
+router.post('/signup', validateUserBody, createUser);
 
 router.use("/items", clothingItem);
 router.use("/user", auth, user);

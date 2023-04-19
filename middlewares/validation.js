@@ -64,7 +64,6 @@ const validateIds = celebrate({
   }),
 });
 
-
 module.exports = {
   validateIds,
   validateCardBody,
