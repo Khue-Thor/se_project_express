@@ -8,7 +8,7 @@ const { STATUS_CODES } = require("../utils/errors");
 
 const { JWT_SECRET } = require("../utils/config");
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -21,11 +21,11 @@ const login = (req, res) => {
       }
     })
     .catch(() => {
-      res.status(STATUS_CODES.Unauthorized).send({message: "Incorrect email or password"});
+     next()
     });
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -37,18 +37,10 @@ const getUser = (req, res) => {
         data: user,
       });
     })
-    .catch((err) => {
-      if (err.name === "CastError") {
-        res.status(STATUS_CODES.NotFound).send({ message: "Invalid Id" });
-      } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "Error occured on server" });
-      }
-    });
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   bcrypt
