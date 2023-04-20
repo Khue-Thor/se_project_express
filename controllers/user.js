@@ -6,8 +6,7 @@ const User = require("../models/user");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const { JWT_SECRET } = require("../utils/config");
-
+const { JWT_SECRET } = process.env;
 const {
   UnauthorizedError,
   NotFoundError,
