@@ -6,7 +6,7 @@ const User = require("../models/user");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const { JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 const {
   UnauthorizedError,
   NotFoundError,
@@ -20,9 +20,13 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (user) {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-          expiresIn: "7d",
-        });
+        const token = jwt.sign(
+          { _id: user._id },
+          NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
+          {
+            expiresIn: "7d",
+          }
+        );
         res.send({ email, token });
       }
     })
@@ -65,7 +69,7 @@ const createUser = (req, res, next) => {
       } else if (error.code === STATUS_CODES.DuplicataeEroor) {
         next(new ConflictError("User already exist"));
       } else {
-       next(error)
+        next(error);
       }
     });
 };
@@ -81,7 +85,7 @@ const updateUser = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw NotFoundError('No user with this ID found')
+        throw NotFoundError("No user with this ID found");
       }
       return res.send({ data: user });
     })
