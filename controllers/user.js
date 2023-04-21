@@ -6,7 +6,7 @@ const User = require("../models/user");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const JWT_SECRET  = process.env;
 
 const UnauthorizedError = require("../utils/errors/unauthorized");
 
