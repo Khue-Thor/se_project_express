@@ -2,12 +2,11 @@ const ClothingItem = require("../models/clothingItem");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const {
-  NotFoundError,
-  BadRequestError,
-  ForBiddenError,
-} = require("../utils/errors");
+const NotFoundError = require("../utils/errors/notfound");
 
+const BadRequestError = require("../utils/errors/badrequest");
+
+const ForBiddenError = require("../utils/errors/forbidden");
 
 const getItems = (req, res, next) => {
   ClothingItem.find({})
@@ -34,7 +33,7 @@ const createItem = (req, res, next) => {
       if (err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -47,13 +46,13 @@ const deleteItem = (req, res, next) => {
       if (item.owner.equals(req.user._id)) {
         return item.deleteOne().then(() => res.send({ ClothingItem: item }));
       }
-      return next(new ForBiddenError("Forbidden"))
+      return next(new ForBiddenError("Forbidden"));
     })
     .catch((err) => {
       if (err.name === "CastError") {
-       next(new BadRequestError("Invalid Id"))
+        next(new BadRequestError("Invalid Id"));
       } else if (err.name === "DocumentNotFoundError") {
-        next(new NotFoundError('Item not found'))
+        next(new NotFoundError("Item not found"));
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -72,14 +71,14 @@ const likeItem = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-       throw new NotFoundError("Card Not Found")
+        throw new NotFoundError("Card Not Found");
       } else {
         res.send(card);
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        next(new BadRequestError("Invalid Id"))
+        next(new BadRequestError("Invalid Id"));
       } else {
         res
           .status(STATUS_CODES.ServerError)
@@ -105,7 +104,7 @@ const disLikeItem = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        next(new BadRequestError("Invalid Id"))
+        next(new BadRequestError("Invalid Id"));
       } else {
         res
           .status(STATUS_CODES.ServerError)
