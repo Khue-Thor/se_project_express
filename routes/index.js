@@ -12,8 +12,6 @@ const {validateUserLogin, validateUserBody} = require("../middlewares/validation
 
 const {login, createUser} = require('../controllers/user')
 
-
-
 router.post('/signin', validateUserLogin, login);
 router.post('/signup', validateUserBody, createUser);
 

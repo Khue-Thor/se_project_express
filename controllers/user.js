@@ -21,8 +21,7 @@ const login = (req, res, next) => {
     .then((user) => {
       if (user) {
         const token = jwt.sign(
-          { _id: user._id },
-          NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
+          { _id: user._id }, JWT_SECRET,
           {
             expiresIn: "7d",
           }
