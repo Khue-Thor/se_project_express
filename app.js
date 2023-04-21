@@ -1,8 +1,12 @@
+require('dotenv').config();
+
 const express = require("express");
 
 const cors = require("cors");
 
 const app = express();
+
+console.log(process.env.NODE_ENV); // production
 
 const mongoose = require("mongoose");
 

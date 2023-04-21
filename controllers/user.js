@@ -6,7 +6,7 @@ const User = require("../models/user");
 
 const { STATUS_CODES } = require("../utils/errors");
 
-const JWT_SECRET  = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const UnauthorizedError = require("../utils/errors/unauthorized");
 
@@ -22,7 +22,7 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (user) {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        const token = jwt.sign({ _id: user._id },  NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET, {
           expiresIn: "7d",
         });
         res.send({ email, token });
