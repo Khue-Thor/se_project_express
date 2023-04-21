@@ -6,8 +6,6 @@ const cors = require("cors");
 
 const app = express();
 
-console.log(process.env.NODE_ENV); // production
-
 const mongoose = require("mongoose");
 
 const { PORT = 3001 } = process.env;
