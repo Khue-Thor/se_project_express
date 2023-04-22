@@ -16,4 +16,11 @@ Technologies:
 
 `npm run dev` — to launch the server with the hot reload feature
 
-https://wtwr-k.chickenkiller.com
+API: api.wtwr-k.chickenkiller.com
+
+WEB:
+- https://wtwr-k.chickenkiller.com
+- wtwr-k.chickenkiller.com
+
+frontend repo:
+https://github.com/Khue-Thor/se_project_react
