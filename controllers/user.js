@@ -8,6 +8,7 @@ const { STATUS_CODES } = require("../utils/errors");
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+
 const UnauthorizedError = require("../utils/errors/unauthorized");
 
 const NotFoundError = require("../utils/errors/notfound");
@@ -22,7 +23,7 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       if (user) {
-        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
+        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET, {
           expiresIn: "7d",
         });
         res.send({ email, token });
