@@ -1,11 +1,12 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const express = require("express");
+
 const cors = require("cors");
 
-const app = express();
-
 const mongoose = require("mongoose");
+
+const app = express();
 
 const { PORT = 3001 } = process.env;
 
@@ -22,11 +23,11 @@ const routes = require("./routes/index");
 
 app.use(express.json());
 app.use(cors());
-app.use("*", cors());
+app.options("*", cors());
 
-app.get('/crash-test', () => {
+app.get("/crash-test", () => {
   setTimeout(() => {
-    throw new Error('Server will crash now');
+    throw new Error("Server will crash now");
   }, 0);
 });
 
