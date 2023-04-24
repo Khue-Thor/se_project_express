@@ -1,6 +1,8 @@
-const router = require('express').Router();
-
+const router = require("express").Router();
+const { celebrate, Joi, errors } = require("celebrate");
 const auth = require("../middlewares/auth");
+
+const { validateCardBody, validateIds } = require("../middlewares/validation");
 
 const {
   createItem,
@@ -8,21 +10,21 @@ const {
   deleteItem,
   likeItem,
   disLikeItem,
-} = require('../controllers/clothingItem');
+} = require("../controllers/clothingItem");
 
 // Read
-router.get('/', getItems);
+router.get("/", getItems);
 
 // Create
-router.post('/', auth, createItem);
+router.post("/", auth, validateCardBody, createItem);
 
 // Delete
-router.delete('/:id', auth, deleteItem);
+router.delete("/:id", auth, validateIds, deleteItem);
 
 // Like
-router.put('/:id/likes', auth, likeItem);
+router.put("/:id/likes", auth, validateIds, likeItem);
 
 // Dislike
-router.delete('/:id/likes', auth, disLikeItem);
+router.delete("/:id/likes", auth, validateIds, disLikeItem);
 
 module.exports = router;

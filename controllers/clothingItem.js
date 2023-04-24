@@ -54,9 +54,7 @@ const deleteItem = (req, res, next) => {
       } else if (err.name === "DocumentNotFoundError") {
         next(new NotFoundError("Item not found"));
       } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "An error has occurred on the server" });
+        next(err)
       }
     });
 };
@@ -80,9 +78,7 @@ const likeItem = (req, res, next) => {
       if (err.name === "CastError") {
         next(new BadRequestError("Invalid Id"));
       } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "An error has occured on the server" });
+        next(err);
       }
     });
 };
@@ -97,7 +93,7 @@ const disLikeItem = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(STATUS_CODES.NotFound).send({ message: "Card not found" });
+        throw new NotFoundError('Cart Not Found')
       } else {
         res.send(card);
       }
@@ -106,9 +102,7 @@ const disLikeItem = (req, res, next) => {
       if (err.name === "CastError") {
         next(new BadRequestError("Invalid Id"));
       } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "An error has occured on the server" });
+        next(err);
       }
     });
 };

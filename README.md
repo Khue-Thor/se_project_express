@@ -21,7 +21,7 @@ API: api.wtwr-k.chickenkiller.com
 Domain Names:
 - https://www.wtwr-k.chickenkiller.com
 - https://wtwr-k.chickenkiller.com
--- https://api.wtwr-k.chickenkiller.com
+- https://api.wtwr-k.chickenkiller.com
 
 frontend repo:
 https://github.com/Khue-Thor/se_project_react

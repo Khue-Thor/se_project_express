@@ -91,9 +91,7 @@ const updateUser = (req, res, next) => {
       if (err.name === "ValidationError") {
         next(new BadRequestError("Invalid data"));
       } else {
-        res
-          .status(STATUS_CODES.ServerError)
-          .send({ message: "Error occured on server" });
+        next(err);
       }
     });
 };

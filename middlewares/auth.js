@@ -3,11 +3,10 @@ const jwt = require("jsonwebtoken");
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const { STATUS_CODES } = require("../utils/errors");
+const UnauthorizedError = require("../utils/errors/unauthorized");
 
 const handleAuthError = (res) => {
-  res
-    .status(STATUS_CODES.Unauthorized)
-    .send({ message: "Authorization Error" });
+  throw new UnauthorizedError('Authorization Error');
 };
 
 module.exports = (req, res, next) => {
