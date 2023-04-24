@@ -1,7 +1,6 @@
 const router = require("express").Router();
 
-const { STATUS_CODES } = require("../utils/errors");
-
+const NotFoundError = require('../utils/errors/notfound')
 
 const clothingItem = require("./clothingItem");
 
