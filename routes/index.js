@@ -19,7 +19,7 @@ router.post('/signup', validateUserBody, createUser);
 router.use("/items", clothingItem);
 router.use("/user", auth, user);
 
-router.use(auth, (req, res, next) => {
+router.use(auth, () => {
   throw new NotFoundError('Requested resource not found')
 });
 

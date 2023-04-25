@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { celebrate, Joi, errors } = require("celebrate");
+
 const auth = require("../middlewares/auth");
 
 const { validateCardBody, validateIds } = require("../middlewares/validation");
